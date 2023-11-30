@@ -1,0 +1,26 @@
+diff --git a/build/build.sh b/build/build.sh
+index fe55358..ef8adce 100755
+--- a/build/build.sh
++++ b/build/build.sh
+@@ -54,6 +54,8 @@ if [[ "${UNAME_ARCH}" == "arm64" ]]; then
+   export VSCODE_ARCH="arm64"
+ elif [[ "${UNAME_ARCH}" == "ppc64le" ]]; then
+   export VSCODE_ARCH="ppc64le"
++elif [[ "${UNAME_ARCH}" == "loongarch64" ]]; then
++  export VSCODE_ARCH="loong64"
+ else
+   export VSCODE_ARCH="x64"
+ fi
+diff --git a/get_repo.sh b/get_repo.sh
+index 43af170..a9f1b2f 100755
+--- a/get_repo.sh
++++ b/get_repo.sh
+@@ -65,7 +65,7 @@ mkdir -p vscode
+ cd vscode || { echo "'vscode' dir not found"; exit 1; }
+ 
+ git init -q
+-git remote add origin https://github.com/Microsoft/vscode.git
++git remote add origin https://hub.njuu.cf/Microsoft/vscode.git
+ 
+ # figure out latest tag by calling MS update API
+ if [[ -z "${MS_TAG}" ]]; then

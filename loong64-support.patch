@@ -1,0 +1,189 @@
+diff --git a/build/gulpfile.reh.js b/build/gulpfile.reh.js
+index 7f485a072c0..e11aaf7aee7 100644
+--- a/build/gulpfile.reh.js
++++ b/build/gulpfile.reh.js
+@@ -44,6 +44,7 @@ const BUILD_TARGETS = [
+ 	{ platform: 'linux', arch: 'x64' },
+ 	{ platform: 'linux', arch: 'armhf' },
+ 	{ platform: 'linux', arch: 'arm64' },
++	{ platform: 'linux', arch: 'loong64' },
+ 	{ platform: 'alpine', arch: 'arm64' },
+ 	// legacy: we use to ship only one alpine so it was put in the arch, but now we ship
+ 	// multiple alpine images and moved to a better model (alpine as the platform)
+diff --git a/build/gulpfile.scan.js b/build/gulpfile.scan.js
+index 6f8144b0954..a820adf8088 100644
+--- a/build/gulpfile.scan.js
++++ b/build/gulpfile.scan.js
+@@ -24,6 +24,7 @@ const BUILD_TARGETS = [
+ 	{ platform: 'linux', arch: 'x64' },
+ 	{ platform: 'linux', arch: 'armhf' },
+ 	{ platform: 'linux', arch: 'arm64' },
++	{ platform: 'linux', arch: 'loong64' },
+ ];
+ 
+ BUILD_TARGETS.forEach(buildTarget => {
+diff --git a/build/gulpfile.vscode.js b/build/gulpfile.vscode.js
+index 4ae98a95577..90219600cf5 100644
+--- a/build/gulpfile.vscode.js
++++ b/build/gulpfile.vscode.js
+@@ -429,6 +429,7 @@ const BUILD_TARGETS = [
+ 	{ platform: 'linux', arch: 'x64' },
+ 	{ platform: 'linux', arch: 'armhf' },
+ 	{ platform: 'linux', arch: 'arm64' },
++	{ platform: 'linux', arch: 'loong64' },
+ ];
+ BUILD_TARGETS.forEach(buildTarget => {
+ 	const dashed = (str) => (str ? `-${str}` : ``);
+diff --git a/build/gulpfile.vscode.linux.js b/build/gulpfile.vscode.linux.js
+index 0d7d3c5b7f8..db3f9858266 100644
+--- a/build/gulpfile.vscode.linux.js
++++ b/build/gulpfile.vscode.linux.js
+@@ -29,7 +29,7 @@ const linuxPackageRevision = Math.floor(new Date().getTime() / 1000);
+  * @param {string} arch
+  */
+ function getDebPackageArch(arch) {
+-	return { x64: 'amd64', armhf: 'armhf', arm64: 'arm64' }[arch];
++	return { x64: 'amd64', armhf: 'armhf', arm64: 'arm64', loong64: 'loong64' }[arch];
+ }
+ 
+ function prepareDebPackage(arch) {
+@@ -136,7 +136,7 @@ function getRpmBuildPath(rpmArch) {
+  * @param {string} arch
+  */
+ function getRpmPackageArch(arch) {
+-	return { x64: 'x86_64', armhf: 'armv7hl', arm64: 'aarch64' }[arch];
++	return { x64: 'x86_64', armhf: 'armv7hl', arm64: 'aarch64', loong64: 'loong64' }[arch];
+ }
+ 
+ /**
+@@ -292,6 +292,7 @@ const BUILD_TARGETS = [
+ 	{ arch: 'x64' },
+ 	{ arch: 'armhf' },
+ 	{ arch: 'arm64' },
++	{ loong64: 'loong64'},
+ ];
+ 
+ BUILD_TARGETS.forEach(({ arch }) => {
+diff --git a/build/linux/debian/types.ts b/build/linux/debian/types.ts
+index e97485ef128..a5fd01062a1 100644
+--- a/build/linux/debian/types.ts
++++ b/build/linux/debian/types.ts
+@@ -3,8 +3,8 @@
+  *  Licensed under the MIT License. See License.txt in the project root for license information.
+  *--------------------------------------------------------------------------------------------*/
+ 
+-export type DebianArchString = 'amd64' | 'armhf' | 'arm64';
++export type DebianArchString = 'amd64' | 'armhf' | 'arm64' | 'loong64';
+ 
+ export function isDebianArchString(s: string): s is DebianArchString {
+-	return ['amd64', 'armhf', 'arm64'].includes(s);
++	return ['amd64', 'armhf', 'arm64', 'loong64'].includes(s);
+ }
+diff --git a/cli/src/update_service.rs b/cli/src/update_service.rs
+index d218e4a1333..ca1365e3278 100644
+--- a/cli/src/update_service.rs
++++ b/cli/src/update_service.rs
+@@ -211,6 +211,7 @@ pub enum Platform {
+ 	LinuxX64,
+ 	LinuxARM64,
+ 	LinuxARM32,
++	LinuxLOONG64,
+ 	DarwinX64,
+ 	DarwinARM64,
+ 	WindowsX64,
+@@ -224,6 +225,7 @@ impl Platform {
+ 			Platform::LinuxX64 => Some("linux-x64".to_owned()),
+ 			Platform::LinuxARM64 => Some("linux-arm64".to_owned()),
+ 			Platform::LinuxARM32 => Some("linux-armhf".to_owned()),
++			Platform::LinuxLOONG64 => Some("linux-loong64".to_owned()),
+ 			Platform::DarwinX64 => Some("darwin".to_owned()),
+ 			Platform::DarwinARM64 => Some("darwin-arm64".to_owned()),
+ 			Platform::WindowsX64 => Some("win32-x64-archive".to_owned()),
+@@ -239,6 +241,7 @@ impl Platform {
+ 			Platform::LinuxX64 => "server-linux-x64",
+ 			Platform::LinuxARM64 => "server-linux-arm64",
+ 			Platform::LinuxARM32 => "server-linux-armhf",
++			Platform::LinuxLOONG64 => "server-linux-loong64",
+ 			Platform::DarwinX64 => "server-darwin",
+ 			Platform::DarwinARM64 => "server-darwin-arm64",
+ 			Platform::WindowsX64 => "server-win32-x64",
+@@ -255,6 +258,7 @@ impl Platform {
+ 			Platform::LinuxX64 => "cli-linux-x64",
+ 			Platform::LinuxARM64 => "cli-linux-arm64",
+ 			Platform::LinuxARM32 => "cli-linux-armhf",
++			Platform::LinuxLOONG64 => "cli-linux-loong64",
+ 			Platform::DarwinX64 => "cli-darwin-x64",
+ 			Platform::DarwinARM64 => "cli-darwin-arm64",
+ 			Platform::WindowsARM64 => "cli-win32-arm64",
+@@ -287,6 +291,8 @@ impl Platform {
+ 			Some(Platform::LinuxARM32)
+ 		} else if cfg!(all(target_os = "linux", target_arch = "aarch64")) {
+ 			Some(Platform::LinuxARM64)
++		} else if cfg!(all(target_os = "linux", target_arch = "loong64")) {
++			Some(Platform::LinuxLOONG64)
+ 		} else if cfg!(all(target_os = "macos", target_arch = "x86_64")) {
+ 			Some(Platform::DarwinX64)
+ 		} else if cfg!(all(target_os = "macos", target_arch = "aarch64")) {
+@@ -311,6 +317,7 @@ impl fmt::Display for Platform {
+ 			Platform::LinuxX64 => "LinuxX64",
+ 			Platform::LinuxARM64 => "LinuxARM64",
+ 			Platform::LinuxARM32 => "LinuxARM32",
++			Platform::LinuxLOONG64 => "LinuxLOONG64",
+ 			Platform::DarwinX64 => "DarwinX64",
+ 			Platform::DarwinARM64 => "DarwinARM64",
+ 			Platform::WindowsX64 => "WindowsX64",
+diff --git a/cli/src/util/prereqs.rs b/cli/src/util/prereqs.rs
+index d8cbd1b91dd..893a7393f08 100644
+--- a/cli/src/util/prereqs.rs
++++ b/cli/src/util/prereqs.rs
+@@ -64,6 +64,8 @@ impl PreReqChecker {
+ 				Platform::LinuxX64
+ 			} else if cfg!(target_arch = "arm") {
+ 				Platform::LinuxARM32
++			} else if cfg!(target_arch = "loong64") {
++				Platform::LinuxLOONG64
+ 			} else {
+ 				Platform::LinuxARM64
+ 			});
+diff --git a/src/vs/platform/extensionManagement/common/extensionManagement.ts b/src/vs/platform/extensionManagement/common/extensionManagement.ts
+index ba729ddf9a5..d356c3046d4 100644
+--- a/src/vs/platform/extensionManagement/common/extensionManagement.ts
++++ b/src/vs/platform/extensionManagement/common/extensionManagement.ts
+@@ -28,6 +28,7 @@ export function TargetPlatformToString(targetPlatform: TargetPlatform) {
+ 		case TargetPlatform.LINUX_X64: return 'Linux 64 bit';
+ 		case TargetPlatform.LINUX_ARM64: return 'Linux ARM 64';
+ 		case TargetPlatform.LINUX_ARMHF: return 'Linux ARM';
++		case TargetPlatform.LINUX_LOONG64: return 'Linux LOONG64';
+ 
+ 		case TargetPlatform.ALPINE_X64: return 'Alpine Linux 64 bit';
+ 		case TargetPlatform.ALPINE_ARM64: return 'Alpine ARM 64';
+@@ -51,6 +52,7 @@ export function toTargetPlatform(targetPlatform: string): TargetPlatform {
+ 		case TargetPlatform.LINUX_X64: return TargetPlatform.LINUX_X64;
+ 		case TargetPlatform.LINUX_ARM64: return TargetPlatform.LINUX_ARM64;
+ 		case TargetPlatform.LINUX_ARMHF: return TargetPlatform.LINUX_ARMHF;
++		case TargetPlatform.LINUX_LOONG64: return TargetPlatform.LINUX_LOONG64;
+ 
+ 		case TargetPlatform.ALPINE_X64: return TargetPlatform.ALPINE_X64;
+ 		case TargetPlatform.ALPINE_ARM64: return TargetPlatform.ALPINE_ARM64;
+@@ -86,6 +88,9 @@ export function getTargetPlatform(platform: Platform | 'alpine', arch: string |
+ 			if (arch === 'arm') {
+ 				return TargetPlatform.LINUX_ARMHF;
+ 			}
++			if (arch === 'loong64') {
++				return TargetPlatform.LINUX_LOONG64;
++			}
+ 			return TargetPlatform.UNKNOWN;
+ 
+ 		case 'alpine':
+diff --git a/src/vs/platform/extensions/common/extensions.ts b/src/vs/platform/extensions/common/extensions.ts
+index 222f6b91861..3e68921b3b5 100644
+--- a/src/vs/platform/extensions/common/extensions.ts
++++ b/src/vs/platform/extensions/common/extensions.ts
+@@ -295,6 +295,7 @@ export const enum TargetPlatform {
+ 	LINUX_X64 = 'linux-x64',
+ 	LINUX_ARM64 = 'linux-arm64',
+ 	LINUX_ARMHF = 'linux-armhf',
++	LINUX_LOONG64 = 'linux-loong64',
+ 
+ 	ALPINE_X64 = 'alpine-x64',
+ 	ALPINE_ARM64 = 'alpine-arm64',

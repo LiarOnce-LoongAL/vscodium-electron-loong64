@@ -18,6 +18,7 @@ cd ..
 cd ../..
 mv PKGBUILD PKGBUILD.original
 mv PKGBUILD.package PKGBUILD
+makepkg -si
 ```
 
 ## 已知问题

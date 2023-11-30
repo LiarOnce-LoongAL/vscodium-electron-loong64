@@ -30,3 +30,5 @@ mv PKGBUILD.package PKGBUILD
 
    ![vscode-ripgrep](C:\Users\qq106\Desktop\vscode-loong\vscode-ripgrep.png)
 
+3. 由于使用了系统提供的 Electron，在安装需要重启的插件后会变为打开 Electron 默认欢迎页，目前不影响使用，关闭并重新打开即可
+

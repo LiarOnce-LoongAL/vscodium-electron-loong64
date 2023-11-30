@@ -28,7 +28,7 @@ mv PKGBUILD.package PKGBUILD
 
 2. 由于 VSCode 其中一个依赖 `ripgrep` 下的 `rg` 是直接提供的二进制程序，且该程序是 x86 程序（虽然是 32 位的），为保正常运行，请照常安装 LAT 转译层
 
-   ![vscode-ripgrep](.\vscode-ripgrep.png)
+   ![vscode-ripgrep](./vscode-ripgrep.png)
 
 3. 由于使用了系统提供的 Electron，在安装需要重启的插件后会变为打开 Electron 默认欢迎页，目前不影响使用，关闭并重新打开即可
 

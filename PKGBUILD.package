@@ -1,6 +1,4 @@
-# Maintainer: Richardn <rniu at umich dot edu>
-# Contributor: HurricanePootis <hurricanepootis@protonmail.com>
-# Contributor: Łukasz Mariański <lmarianski at protonmail dot com>
+# Maintainer: LiarOnce <liaronce@hotmail.com>
 
 _pkgname=vscodium
 _electron=electron22

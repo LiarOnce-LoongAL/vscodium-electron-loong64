@@ -27,7 +27,7 @@ index b4c5f74..440d3e7 100755
 +  # During build, electron source will be downloaded
 +  # In this package, the version downloaded is the same as the system version
 +  # Thus, replace the checksum file with the one for the system version
-+  curl -L https://hub.njuu.cf/electron/electron/releases/download/v$_target/SHASUMS256.txt > build/checksums/electron.txt
++  curl -L https://gms.magecorn.com/loongarch/electron/v$_target/SHASUMS256.txt > build/checksums/electron.txt
  
    yarn monaco-compile-check
    yarn valid-layers-check

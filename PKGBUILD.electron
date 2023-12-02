@@ -32,9 +32,10 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP')
 
-# Even though we don't officially support other archs, let's
-# allow the user to use this PKGBUILD to compile the package
-# for his architecture
+shopt -s extglob
+
+# Even though we don't officially support other archs, let's allow the
+# user to use this PKGBUILD to compile the package for their architecture.
 case "$CARCH" in
   i686)
     _vscode_arch=ia32
@@ -54,46 +55,12 @@ case "$CARCH" in
     ;;
 esac
 
-shopt -s extglob
-
-prepare() {
-	# Abort early if the user does not have the selected electron version installed
-	if ! which $_electron; then
-		echo "Selected electron missing from system. Modify PKGBUILD and retry."
-		exit 1
-	fi
-
-	# Point to system electron in launcher scripts
-	# Do not use inplace sed so that user could change electron version in rebuilds
-	sed "s/@ELECTRON@/${_electron}/" "$srcdir/vscodium.sh" > "$srcdir/vscodium-electron.sh"
-	sed "s/@ELECTRON@/${_electron}/" "$srcdir/vscodium.js" > "$srcdir/vscodium-electron.js"
-
-	cd "$srcdir/vscodium"
-
-	# Remove old build
-	if [ -d vscode ]; then
-		rm -rf vscode VSCode*
-	fi
-
-	# Add LoongArch64 support
-	cp "$startdir/loong64-support.patch" "$srcdir/vscodium/patches/"
-
-	# Mangle original vscodium build script to build against system electron
-	patch -u build.sh -i ../../vscodium-electron.patch
-	patch -p1 -i ../../vscodium-loong64.patch
+prepare(){
+    echo "Skip prepare"
 }
 
 build() {
-	# Contain yarn, electron and node
-	export HOME=$srcdir
-	# Use non-hidden yarn cache folder
-	yarn config set cache-folder "$srcdir/yarn-cache"
-	yarn config set electron_mirror https://gms.magecorn.com/loongarch/electron/
-
-	cd "$srcdir/vscodium"
-	rm "$srcdir/vscodium/patches/ppc64le-support.patch" # Conflict, delete ppc64le support
-
-	. build/build.sh
+    echo "Skip build"
 }
 
 package() {

@@ -33,4 +33,4 @@ makepkg -si --noprepare --nobuild
 
 3. 由于使用了系统提供的 Electron，在安装需要重启的插件后会变为打开 Electron 默认欢迎页，目前不影响使用，关闭并重新打开即可
 
-4. VSCode 依赖 `@vscode/spdlog(node-spdlog)` 通过 `node-gyp` 编译后运行不正常，会导致长时间显示例如“正在运行 XXX 参与者”消息
+4. 若长时间显示例如“正在运行 XXX 参与者”消息，请在设置中搜索 `Participants: Timeout` 设置为 `0`

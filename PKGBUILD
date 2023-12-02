@@ -11,7 +11,7 @@ pkgdesc="VS Code without MS branding/telemetry/licensing. - System-wide Electron
 arch=('x86_64' 'aarch64' 'armv7h' 'loong64')
 url="https://hub.njuu.cf/VSCodium/vscodium"
 license=('MIT')
-depends=("$_electron-bin" 'libsecret' 'libx11' 'libxkbfile' 'ripgrep')
+depends=("$_electron-bin" 'libsecret' 'libx11' 'libxkbfile' 'ripgrep' 'nodejs-lts-hydrogen' 'npm' 'yarn' 'libdbusmenu-glib')
 optdepends=('x11-ssh-askpass: SSH authentication'
 	    'gvfs: For move to trash functionality'
 	    'libdbusmenu-glib: For KDE global menu')

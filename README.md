@@ -7,8 +7,10 @@ VSCodium for LoongArch with system-wide Electron.
 
 ## 使用方法
 
+为了加速下载源码，使用了以下镜像站：`https://hub.njuu.cf`
+
 ```bash
-mv PKGBUILD.original PKGBUILD
+git clone https://github.com/LiarOnce/vscodium-electron-loong64.git
 makepkg -si # 在最后的打包过程中一定会失败，请继续往下看，原因见已知问题
 
 cd src/vscodium/vscode
@@ -16,9 +18,7 @@ yarn gulp vscode-linux-arm64-min-ci
 cd ..
 \cp -rf VSCode-linux-arm64/resources VSCode-linux-loong64 # 若最终运行不成功请手动复制并覆盖
 cd ../..
-mv PKGBUILD PKGBUILD.original
-mv PKGBUILD.package PKGBUILD
-makepkg -si
+makepkg -si --noprepare --nobuild
 ```
 
 ## 已知问题
@@ -33,3 +33,4 @@ makepkg -si
 
 3. 由于使用了系统提供的 Electron，在安装需要重启的插件后会变为打开 Electron 默认欢迎页，目前不影响使用，关闭并重新打开即可
 
+4. VSCode 依赖 `@vscode/spdlog(node-spdlog)` 通过 `node-gyp` 编译后运行不正常，会导致长时间显示例如“正在运行 XXX 参与者”消息

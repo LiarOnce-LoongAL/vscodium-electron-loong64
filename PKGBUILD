@@ -5,11 +5,11 @@ _electron=electron22
 _nodejs="18.18.0"
 
 pkgname=${_pkgname}-electron
-pkgver=1.84.2.23319
+pkgver=1.85.0.23343
 pkgrel=1
 pkgdesc="VS Code without MS branding/telemetry/licensing. - System-wide Electron edition"
 arch=('x86_64' 'aarch64' 'armv7h' 'loong64')
-url="https://hub.njuu.cf/VSCodium/vscodium"
+url="https://github.com/VSCodium/vscodium"
 license=('MIT')
 depends=("$_electron-bin" 'libsecret' 'libx11' 'libxkbfile' 'ripgrep')
 optdepends=('x11-ssh-askpass: SSH authentication'
@@ -17,7 +17,7 @@ optdepends=('x11-ssh-askpass: SSH authentication'
 	    'libdbusmenu-glib: For KDE global menu')
 makedepends=('git' 'python' 'jq' 'nodejs-lts-hydrogen' 'npm' 'yarn')
 conflicts=('vscodium')
-source=("git+https://hub.njuu.cf/VSCodium/vscodium.git#tag=${pkgver}"
+source=("git+https://hub.fgit.cf/VSCodium/vscodium.git#tag=${pkgver}"
 		"vscodium-electron.patch"
 		"vscodium-loong64.patch"
 		"${_pkgname}.sh"
@@ -88,6 +88,7 @@ build() {
 	export HOME=$srcdir
 	# Use non-hidden yarn cache folder
 	yarn config set cache-folder "$srcdir/yarn-cache"
+	yarn config set registry https://registry.npmmirror.com
 	yarn config set electron_mirror https://gms.magecorn.com/loongarch/electron/
 
 	cd "$srcdir/vscodium"

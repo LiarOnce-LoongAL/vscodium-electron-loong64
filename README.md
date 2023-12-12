@@ -7,18 +7,14 @@ VSCodium for LoongArch with system-wide Electron.
 
 ## 使用方法
 
-为了加速下载源码，使用了以下镜像站：`https://hub.njuu.cf`
+为了加速下载源码，使用了以下镜像站：`https://hub.njuu.cf`、`https://hub.fgit.cf/`
 
 个人 Electron 镜像（仅 loong64 架构，[来源](https://github.com/fedora-remix-loongarch/electron-bin)）：`https://gms.magecorn.com/loongarch/electron/`  
 [捐助镜像站](https://gms.magecorn.com/#/donate)
 
 ```bash
 git clone https://github.com/LiarOnce/vscodium-electron-loong64.git
-makepkg -s
-
-# 以下命令可选 (需上一个命令执行后)
-makepkg -p PKGBUILD.standalone -s # 仅打包 (自带 Electron)
-makepkg -p PKGBUILD.electron -s # 仅打包 (系统 Electron)
+makepkg -si
 ```
 
 ## 已知问题

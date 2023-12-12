@@ -2,11 +2,11 @@
 
 pkgname=vscodium
 # Make sure the pkgver matches the git tags in vscodium and vscode git repo's!
-pkgver=1.84.2.23319
+pkgver=1.85.0.23343
 pkgrel=1
 pkgdesc="Free/Libre Open Source Software Binaries of VSCode (git build from latest release)."
 arch=('x86_64' 'aarch64' 'armv7h' 'loong64')
-url='https://hub.njuu.cf/VSCodium/vscodium.git'
+url='https://github.com/VSCodium/vscodium'
 license=('MIT')
 
 depends=(
@@ -37,7 +37,7 @@ makedepends=(
     'pkg-config'
 )
 source=(
-    "git+https://hub.njuu.cf/VSCodium/vscodium.git#tag=${pkgver}"
+    "git+https://hub.fgit.cf/VSCodium/vscodium.git#tag=${pkgver}"
     "${pkgname}-standalone.desktop"
     "${pkgname}-uri-handler-standalone.desktop"
 )

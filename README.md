@@ -19,12 +19,9 @@ makepkg -si
 
 ## 已知问题
 
-1. 由于 VSCode 其中一个依赖 `ripgrep` 下的 `rg` 是直接提供的二进制程序，且该程序是 x86 程序（虽然是 32 位的），为保正常运行，请照常安装 LAT 转译层
-
-   ![vscode-ripgrep](./images/vscode-ripgrep.png)
+1. 全局搜索功能不正常，原因不明
 
 2. 若使用系统提供的 Electron，在安装需要重启的插件后会变为打开 Electron 默认欢迎页，目前不影响使用，关闭并重新打开即可
 
 3. 若长时间显示例如“正在运行 XXX 参与者”消息，请在设置中搜索 `Participants: Timeout` 设置为 `0`
 
-4. 全局搜索功能不正常，原因不明
